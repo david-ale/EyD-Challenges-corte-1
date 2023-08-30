@@ -24,6 +24,32 @@ class TodoList {
         this.tail = newTodo;
     }
 
+    peek(value, current = this.head){
+        if(this.head === null){
+            return false
+        }
+
+        if(current !== null){
+            if(current.value === value){
+                return true
+            } else{
+                return this.peek(value, current.next)
+            }
+        }
+    }
+
+    size(current = this.head, acum = 1){
+        if(this.head === null){
+            return 0
+        }
+
+        if(current.next !== null){
+            return this.size(current.next, acum = acum +1)
+        }
+
+        return acum
+    }
+
     remove(value,current = this.head){
         if(this.head === null){
             return false
