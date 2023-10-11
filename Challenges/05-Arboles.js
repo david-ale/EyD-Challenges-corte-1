@@ -90,9 +90,10 @@ class NaryTree{
     }
 }
 
+//crear un nuevo arbol
 const nary = new NaryTree();
 
-
+//crear los objetos que seran nodos de nuestro arbol
 const yo = {
     nombre : "David Alejandro Sanchez",
     fechaNacimiento : "19/05/03"
@@ -108,7 +109,7 @@ const abuelo = {
     fechaNacimiento: "20/08/1941"
 }
 
-
+//Implementacion
 nary.insert(abuelo);
 nary.insert(papa,abuelo);
 nary.insert(yo,papa);
