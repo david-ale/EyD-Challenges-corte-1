@@ -1,58 +1,52 @@
 class Node {
     constructor(value){
-        this.value = value;
-        this.right = null;
-        this.left = null;
-    }
-
-    isLeaf(){
-        if(this.left == null && this.right == null){
-            return true;
-        } else {
-            return false
+        this.value = value;            
+        this.children = [];
         }
     }
-}
 
-
-class BinaryTree {
+class NaryTree{
     constructor(){
-        this.root = null;
+        this.root=null;
     }
 
-    insert(value){
-        const newNode = new Node(value, null, null);
-
+    search(value, node = this.root) {
         if(!this.root){
-            this.root = newNode;
+            return null;
+        }
+
+        if(this.root.value === value){
+            return this.root;
         }else{
-            let current = this.root;
-            let isFound = false; 
-
-            while(!isFound){
-                if (current.value === value){
-                    isFound = true
-                    return null
-                }
-                if(current.value > value){
-                    if(!current.left){
-                        current.left = newNode
-                        isFound = true
-                        return this
-                    } else{
-                        current = current.left
+            const children = node.children;
+            const inChildren = children.find( item => item.value === value)
+            if( inChildren){
+                return inChildren
+            }else{
+                let hasChild;
+                children.forEach( item => {
+                    if(hasChild){
+                        return;
                     }
-                }else{
-                    if(!current.right){
-                        current.right = newNode
-                        isFound = true
-                        return this
-                    } else{
-                        current = current.right
-                    }
-
-                }
+                    hasChild = this.search(value,item);
+                })
+                return hasChild;
             }
+        }
+    }
+
+    insert(value, parent){
+        const newNode = new Node(value);
+
+        if(!parent){
+            if(!this.root){
+                this.root = newNode;
+            }else{
+                return null;
+            }
+        }else{
+            const parentNode = this.search(parent);
+            parentNode.children.push( newNode );
         }
     }
 
@@ -60,29 +54,68 @@ class BinaryTree {
         if(!node){
             return;
         }
-        console.log(node.value);
-        this.preOrder(node.left);
-        this.preOrder(node.right);
+        console.log(node.value, node.children);
+
+        node.children.forEach( element => {
+            this.preOrder(element);
+        });
     }
 
     postOrder(node = this.root){
         if(!node){
             return;
         }
-        this.postOrder(node.left);
-        this.postOrder(node.right);
+
+        node.children.forEach( element =>{
+            this.postOrder(element);
+        });
         console.log(node.value);
     }
-
 
     inOrder(node = this.root){
         if(!node){
             return;
         }
-        this.inOrder(node.left);
-        console.log(node.value);
-        this.inOrder(node.right);
-        
-    }
 
+        if( node.children.length === 0){
+            console.log(node.value);
+        }else{
+            this.inOrder(node.children[0]);
+            console.log(node.value);
+
+            for( let i = 1; i<node.children.length; i++){
+                this.inOrder(node.children[i]);
+            }
+        }
+    }
 }
+
+const nary = new NaryTree();
+
+
+const yo = {
+    nombre : "David Alejandro Sanchez",
+    fechaNacimiento : "19/05/03"
+}
+
+const papa = {
+    nombre: "Horacio Sanchez Valderrama",
+    fechaNacimiento: "27/10/1968"
+}
+
+const abuelo = {
+    nombre: "Manuel Antonio Sanchez Valderrama",
+    fechaNacimiento: "20/08/1941"
+}
+
+
+nary.insert(abuelo);
+nary.insert(papa,abuelo);
+nary.insert(yo,papa);
+
+console.log("In order");
+nary.inOrder();
+console.log("Post Order")
+nary.postOrder();
+console.log("Pre Order");
+nary.preOrder();
